@@ -86,7 +86,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'користувач(а)'
         verbose_name_plural = 'користувачі'
-        ordering = ['email']
+        ordering = ['-id']
 
     def has_perm(self, perm, obj=None):
         return self.is_superuser
