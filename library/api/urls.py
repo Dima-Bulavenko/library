@@ -15,3 +15,7 @@ router = routers.SimpleRouter()
 #     path('api-login', views.user_login),
 #     path('create-user', views.CreateUser.as_view())
 # ]
+
+urlpatterns = [
+
+]
