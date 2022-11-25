@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'book',
     'order',
     'rest_framework',
-    'api',
     #'rest_framework.authtoken',
 ]
 

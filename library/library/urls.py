@@ -28,5 +28,9 @@ urlpatterns = [
     path('book/', include('book.urls')),
     path('order/', include('order.urls')),
     path('librarian/', include('authentication.urls')),
-    path('api/v1/', include('api.urls')),
+
+    path('api/v1/author/', include('author.rest_urls')),
+    path('api/v1/user/', include('authentication.rest_urls')),
+    #path('api/v1/book/', include('book.rest_urls')),
+    #path('api/v1/order/', include('order.rest_urls')),
 ]

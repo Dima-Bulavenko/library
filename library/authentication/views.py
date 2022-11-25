@@ -9,6 +9,9 @@ from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
+from rest_framework import viewsets
+from .serializers import CustomUserSerializer
+
 
 def create(request):
     if request.method == 'POST':
@@ -105,3 +108,9 @@ def edit(request):
     else:
         form = UserUpdateForm(instance=request.user)
     return render(request, 'authentication/edit.html', {'form': form})
+
+
+#REST API
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.get_all()
+    serializer_class = CustomUserSerializer
