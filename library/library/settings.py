@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'author',
     'book',
     'order',
+    'rest_framework',
+    'api',
+    #'rest_framework.authtoken',
 ]
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
@@ -171,3 +174,14 @@ AUTHENTICATION_BACKENDS = (
 LANGUAGE_CODE = 'uk'
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+#     'PAGE_SIZE': 10,
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.TokenAuthentication',
+#     ],
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',)
+#
+# }
