@@ -100,6 +100,11 @@ class Order(models.Model):
         except:
             return None
 
+    @staticmethod
+    def get_by_user(user):
+        set = Order.objects.filter(user=user.id)
+        return set
+
     def update(self, plated_end_at=None, end_at=None):
         if plated_end_at != None:
             self.plated_end_at = plated_end_at
@@ -130,3 +135,4 @@ class Order(models.Model):
 
     def get_open_url(self):
         return reverse('open_order', kwargs={"pk":self.pk})
+
