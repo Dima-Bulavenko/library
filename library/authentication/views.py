@@ -114,3 +114,4 @@ def edit(request):
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
+    search_fields = ['email']

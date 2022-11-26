@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'book',
     'order',
     'rest_framework',
-    #'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
 ]
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
@@ -164,7 +164,6 @@ try:
 except ImportError:
     pass
 
-
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'authentication.signin.EmailAuthBackend',
@@ -174,9 +173,18 @@ LANGUAGE_CODE = 'uk'
 
 AUTH_USER_MODEL = 'authentication.CustomUser'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-#     'PAGE_SIZE': 10,
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
+}
 #     'DEFAULT_AUTHENTICATION_CLASSES': [
 #         'rest_framework.authentication.TokenAuthentication',
 #     ],
