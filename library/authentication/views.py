@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import *
@@ -114,3 +114,4 @@ def edit(request):
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
+    search_fields = ['email']
