@@ -148,7 +148,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return False
 
     @staticmethod
-    def create(email, password, first_name=None, middle_name=None, last_name=None):
+    def create(email, password, role, first_name=None, middle_name=None, last_name=None):
         """
         :param first_name: first name of a user
         :type first_name: str
@@ -162,10 +162,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         :type password: str
         :return: a new user object which is also written into the DB
         """
-        if len(first_name) <= 20 and len(middle_name) <= 20 and len(last_name) <= 20 and len(email) <= 100 and len(
-                email.split('@')) == 2 and len(CustomUser.objects.filter(email=email)) == 0:
-            custom_user = CustomUser(email=email, first_name=first_name, middle_name=middle_name,
-                                     last_name=last_name)
+        if len(email) <= 100 and len(email.split('@')) == 2 and len(CustomUser.objects.filter(email=email)) == 0:
+            custom_user = CustomUser(email=email, role=role)
+            if first_name != None and len(first_name) <= 20:
+                custom_user.first_name = first_name
+            if last_name != None and len(last_name) <= 20:
+                custom_user.last_name = last_name
+            if middle_name != None and len(middle_name) <= 20:
+                custom_user.middle_name = middle_name
             custom_user.set_password(password)
             custom_user.save()
             return custom_user
