@@ -6,6 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect, render
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import viewsets
 
 sys.path.append('..')
 
@@ -17,6 +18,7 @@ from order.models import Order
 from authentication.models import CustomUser
 from .forms import CreateBookForm, UpdateBookForm, UserBooksForm, FilterBooksForm
 from django.views.generic import ListView
+from .serializers import BookSerializer
 
 
 class BooksViewBase(ListView):
@@ -154,3 +156,7 @@ def delete_book(request, pk):
     raise PermissionDenied
 
 
+# REST API
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
