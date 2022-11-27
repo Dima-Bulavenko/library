@@ -20,6 +20,8 @@ from .forms import CreateBookForm, UpdateBookForm, UserBooksForm, FilterBooksFor
 from django.views.generic import ListView
 from .serializers import BookSerializer
 
+from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
+
 
 class BooksViewBase(ListView):
     model = Book
@@ -160,3 +162,4 @@ def delete_book(request, pk):
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = (DjangoModelPermissionsOrAnonReadOnly, )

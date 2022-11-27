@@ -13,6 +13,7 @@ from django.core.paginator import Paginator
 
 from rest_framework import viewsets
 from .serializers import *
+from rest_framework.permissions import DjangoModelPermissions
 
 
 class AuthorsView(LoginRequiredMixin, ListView):
@@ -83,3 +84,4 @@ def remove_author(request, pk):
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.get_all()
     serializer_class = AuthorSerializer
+    permission_classes = (DjangoModelPermissions, )

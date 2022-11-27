@@ -27,6 +27,9 @@ class Book(models.Model):
         verbose_name = 'книга(у)'
         verbose_name_plural = 'книг(и)'
         ordering = ['-id']
+        permissions = [
+            ('update_book', 'Can update book'),
+        ]
 
     def get_absolute_url(self):
         #return f'{self.id}'
