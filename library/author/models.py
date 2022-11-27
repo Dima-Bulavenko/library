@@ -27,6 +27,9 @@ class Author(models.Model):
         verbose_name = 'автор(а)'
         verbose_name_plural = 'автори(ів)'
         ordering = ['-id']
+        permissions = [
+            ('read_author', 'Can read author'),
+        ]
 
     def __str__(self):
         """

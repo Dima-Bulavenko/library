@@ -8,9 +8,20 @@ from django.views.generic import ListView
 from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from .models import ROLE_CHOICES
 
-from rest_framework import viewsets
-from .serializers import CustomUserSerializer
+from rest_framework import viewsets, views
+from .serializers import CustomUserSerializer, LoginSerializer
+
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.generics import CreateAPIView
+
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
+from .signin import EmailAuthBackend
 
 
 def create(request):
@@ -115,3 +126,45 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
     search_fields = ['email']
+
+
+class AuthenticatedView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        msg = {'message': f'Hi {request.user.email}! Your role is {ROLE_CHOICES[request.user.role][1]} ! Congratulations on being authenticated!'}
+        return Response(msg, status=status.HTTP_200_OK)
+
+
+# class LoginView(APIView):
+#     # This view should be accessible also for unauthenticated users.
+#     permission_classes = (AllowAny,)
+#
+#
+#     def post(self, request, format=None):
+#         serializer = LoginSerializer(data=self.request.data,
+#             context={'request': self.request})
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data['user']
+#         login(request, user)
+#         return Response(None, status=status.HTTP_202_ACCEPTED)
+
+
+class CreateUser(CreateAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CustomUserSerializer
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def user_login(request):
+    email = request.data.get("username")
+    password = request.data.get("password")
+    if email is None or password is None:
+        return Response({'error': 'Please email and password'})
+    user = EmailAuthBackend().authenticate(email=email, password=password)
+    if not user:
+        return Response({'error': 'Invalid data'})
+
+    return Response({'message': f'Hi {request.user.email}! Your role is {ROLE_CHOICES[request.user.role][1]} ! Congratulations on being authenticated!'})

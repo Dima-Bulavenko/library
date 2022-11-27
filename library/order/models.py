@@ -31,6 +31,12 @@ class Order(models.Model):
         verbose_name = 'замовлення'
         verbose_name_plural = 'замовлення'
         ordering = ['-created_at']
+        # permissions = [
+        #     ('read_orders', 'Can read orders'), # visitor(himself), librarian(all), admin(all)
+        #     ('delete_orders', 'Can delete orders'),  # admin
+        #     ('change_orders', 'Can change orders'),  # librarian, admin -- (open/close orders)
+        #     ('add_order', 'Can add order'),  # visitor
+        # ]
 
     def __str__(self):
         """
