@@ -82,7 +82,7 @@ class Order(models.Model):
         pass
 
     @staticmethod
-    def create(user, book, plated_end_at):
+    def create(user, book, plated_end_at, end_at):
         orders = Order.objects.all()
         books = set()
         for order in orders:
@@ -91,7 +91,7 @@ class Order(models.Model):
         if book.id in books and book.count == 1:
             return None
         try:
-            order = Order(user=user, book=book, plated_end_at=plated_end_at)
+            order = Order(user=user, book=book, plated_end_at=plated_end_at, end_at=end_at)
             order.save()
             return order
         except ValueError:

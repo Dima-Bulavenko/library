@@ -9,5 +9,5 @@ router.register('', CustomUserViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('<int:user_id>/order/', OrderByUserViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('<int:user_id>/order/<int:pk>/', OrderByUserViewSet.as_view({'get': 'retrieve', 'delete': 'destroy'})),
+    path('<int:user_id>/order/<int:pk>/', OrderByUserViewSet.as_view({'get': 'retrieve', 'delete': 'destroy', 'put': 'update'})),
 ]

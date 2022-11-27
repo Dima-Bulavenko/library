@@ -91,11 +91,19 @@ class OrderByUserViewSet(viewsets.ModelViewSet):
         return Order.get_by_user(user_id)
 
     def create(self, request, user_id):
+        #data = request.data.copy()
+        #data['user'] = user_id
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             user_creation_id = serializer.validated_data['user'].id
             if user_creation_id == user_id:
                 serializer.save()
                 return Response(serializer.data, status=HTTP_201_CREATED)
-            return Response('Ви намагаєтесь присвоїти замовлення іншому замовнику', status=HTTP_400_BAD_REQUEST)
+            return Response(f'Ви намагаєтесь присвоїти замовлення іншому замовнику, спробуйте ще раз з id = {user_id}', status=HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    # def get_serializer_class(self):
+    #     serializer_class = self.serializer_class
+    #     if self.request.method == 'POST':
+    #         serializer_class = OrderSerializer2
+    #     return serializer_class
