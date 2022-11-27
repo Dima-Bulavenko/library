@@ -8,9 +8,15 @@ from django.views.generic import ListView
 from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from .models import ROLE_CHOICES
 
 from rest_framework import viewsets
 from .serializers import CustomUserSerializer
+
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 def create(request):
@@ -115,3 +121,11 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
     search_fields = ['email']
+
+
+class AuthenticatedView(APIView):
+    permission_classes = [IsAuthenticated, ]
+
+    def get(self, request):
+        msg = {'message': f'Hi {request.user.email}! Your role is {ROLE_CHOICES[request.user.role][1]} ! Congratulations on being authenticated!'}
+        return Response(msg, status=status.HTTP_200_OK)

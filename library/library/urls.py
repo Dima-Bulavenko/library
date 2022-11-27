@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.views.generic.base import TemplateView
-
+from authentication.views import AuthenticatedView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
@@ -29,7 +29,8 @@ urlpatterns = [
     path('order/', include('order.urls')),
     path('librarian/', include('authentication.urls')),
 
-    path('api-auth', include('rest_framework.urls')),
+    #path('api-auth', include('rest_framework.urls')),
+    path('api-auth/', AuthenticatedView.as_view()),
     path('api/v1/author/', include('author.rest_urls')),
     path('api/v1/user/', include('authentication.rest_urls')),
     path('api/v1/book/', include('book.rest_urls')),
