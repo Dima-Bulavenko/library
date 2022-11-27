@@ -28,7 +28,6 @@ class Author(models.Model):
         verbose_name_plural = 'автори(ів)'
         ordering = ['-id']
         permissions = [
-            ('update_author', 'Can update author'),
             ('read_author', 'Can read author'),
         ]
 

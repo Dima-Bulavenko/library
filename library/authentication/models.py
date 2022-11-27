@@ -87,6 +87,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'користувач(а)'
         verbose_name_plural = 'користувачі'
         ordering = ['-id']
+        # permissions = [
+        #     ('read_users', 'Can read users'),  # visitor(himself), librarian(himself, all), admin(himself, all)
+        #     ('delete_users', 'Can delete users'),   # visitor(himself), librarian(himself), admin(himself, all)
+        #     ('change_users', 'Can change users'),  # visitor(himself), librarian(himself), admin(himself, all)
+        #     ('add_user', 'Can add user'),  # Anonymous, admin
+        # ]
 
     def has_perm(self, perm, obj=None):
         return self.is_superuser or self.role
