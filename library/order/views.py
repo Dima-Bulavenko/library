@@ -86,8 +86,12 @@ class OrderViewSet(viewsets.ModelViewSet):
 class OrderByUserViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
 
-    def get_queryset(self):
+    def get_user_id(self):
         user_id = self.request.META['PATH_INFO'].split('/')[4]
+        return user_id
+
+    def get_queryset(self):
+        user_id = self.get_user_id()
         return Order.get_by_user(user_id)
 
     def create(self, request, user_id):
