@@ -107,8 +107,8 @@ class Order(models.Model):
             return None
 
     @staticmethod
-    def get_by_user(user):
-        set = Order.objects.filter(user=user.id)
+    def get_by_user(user_id):
+        set = Order.objects.filter(user=user_id)
         return set
 
     def update(self, plated_end_at=None, end_at=None):
