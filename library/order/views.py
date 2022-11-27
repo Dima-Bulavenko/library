@@ -1,4 +1,6 @@
 from django.views.generic import ListView, DetailView
+from rest_framework import viewsets
+
 from .models import *
 from datetime import datetime as dt, timedelta
 from django.shortcuts import redirect, render
@@ -9,6 +11,7 @@ from django.core.paginator import Paginator
 from .forms import CreateOrderForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .serializers import OrderSerializer
 
 
 class ShowOrders(LoginRequiredMixin, ListView):
@@ -27,7 +30,7 @@ class ShowOrders(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        #print(self.request.user.id)
+        # print(self.request.user.id)
         return context
 
 
@@ -38,6 +41,7 @@ def close_order(request, pk):
         order.save()
         return redirect('orders')
     raise PermissionDenied
+
 
 def oper_order(request, pk):
     if request.user.is_authenticated and request.user.role == 1:
@@ -65,7 +69,11 @@ def create_order(request):
                 return redirect('orders')
 
         return render(request, 'order/create_order.html', context={'books': Book.objects.all(),
-                                                               'form': CreateOrderForm()})
+                                                                   'form': CreateOrderForm()})
     raise PermissionDenied
 
 
+# REST API
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
