@@ -77,7 +77,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     role = models.IntegerField(choices=ROLE_CHOICES, default=0, verbose_name='Роль')
     is_staff = models.BooleanField(default=False, verbose_name='Персонал')
     is_superuser = models.BooleanField(default=False, verbose_name='Суперкористувач')
-    is_active = models.BooleanField(default=False, verbose_name='Активний')
+    is_active = models.BooleanField(default=True, verbose_name='Активний')
     id = models.AutoField(primary_key=True)
 
     USERNAME_FIELD = 'email'

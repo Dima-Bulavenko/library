@@ -14,6 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from rest_framework import viewsets
 from .serializers import OrderSerializer
+from .permissions import NotAllowedUpdateAndDeletePermission
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
@@ -79,8 +80,17 @@ def create_order(request):
 
 # REST API
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
+    # queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = (NotAllowedUpdateAndDeletePermission, )
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated and self.request.user.role != 0:
+            return Order.objects.all()
+
+        return Order.objects.filter(user=self.request.user.pk)
+
+
 
 
 class OrderByUserViewSet(viewsets.ModelViewSet):
@@ -111,3 +121,4 @@ class OrderByUserViewSet(viewsets.ModelViewSet):
     #     if self.request.method == 'POST':
     #         serializer_class = OrderSerializer2
     #     return serializer_class
+

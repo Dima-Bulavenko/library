@@ -3,6 +3,7 @@ from django.urls import reverse
 
 from authentication.models import CustomUser
 from book.models import Book
+from datetime import datetime as dt, timedelta
 
 
 class Order(models.Model):
@@ -25,7 +26,7 @@ class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, verbose_name='Заказник')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата замовлення')
     end_at = models.DateTimeField(default=None, null=True, blank=True, verbose_name='Кінець')
-    plated_end_at = models.DateTimeField(default=None, verbose_name='Плановий кінець')
+    plated_end_at = models.DateTimeField(default=dt.now() + timedelta(days=14), verbose_name='Плановий кінець')
 
     class Meta:
         verbose_name = 'замовлення'
