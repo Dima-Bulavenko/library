@@ -11,5 +11,7 @@ class NotAllowedUpdateAndDeletePermission(permissions.BasePermission):
 
         if request.method == 'PUT' and request.user.is_authenticated and request.user.role != 0:
             return True
+        elif request.method == 'PUT' and request.user.is_authenticated and request.user.role == 0:
+            return False
 
         return bool(request.user.is_authenticated and request.user.role == 0)
