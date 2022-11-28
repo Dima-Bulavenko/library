@@ -125,8 +125,18 @@ def edit(request):
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
-    search_fields = ['email']
 
+    def get_user_id(self):
+        user_id = self.request.META['PATH_INFO'].split('/')[4] # get user id from url
+        print(user_id)
+        return user_id
+
+    # def get_queryset(self):
+    #     url_user_id = self.get_user_id()
+    #     if self.request.user.is_authenticated and (self.request.user.is_superuser or (self.request.user.role == 1 and self.request.method == 'GET')):
+    #         return CustomUser.objects.all()
+    #     if self.request.user.is_authenticated and url_user_id == self.request.user.id:
+    #         return CustomUser.objects.filter(id=self.request.user.pk)
 
 class AuthenticatedView(APIView):
     permission_classes = [IsAuthenticated, ]

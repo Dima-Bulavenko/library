@@ -4,7 +4,7 @@ from .views import *
 from order.views import OrderByUserViewSet
 
 router = routers.DefaultRouter()
-router.register('', CustomUserViewSet)
+router.register('', CustomUserViewSet, basename='CustomUser')
 
 urlpatterns = [
     path('', include(router.urls)),
