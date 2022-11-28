@@ -12,6 +12,7 @@ from .forms import CreateOrderForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .serializers import OrderSerializer
+from .permissions import NotAllowedUpdateAndDeletePermission
 
 
 class ShowOrders(LoginRequiredMixin, ListView):
@@ -75,5 +76,14 @@ def create_order(request):
 
 # REST API
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
+    # queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = (NotAllowedUpdateAndDeletePermission, )
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated and self.request.user.role != 0:
+            return Order.objects.all()
+
+        return Order.objects.filter(user=self.request.user.pk)
+
+

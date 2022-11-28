@@ -8,8 +8,6 @@ from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import viewsets
 
-sys.path.append('..')
-
 from author.models import Author
 from .models import Book
 from django.db.models import Q
