@@ -106,9 +106,7 @@ class OrderByUserViewSet(viewsets.ModelViewSet):
         return Order.get_by_user(user_id)
 
     def create(self, request, user_id):
-        #data = request.data.copy()
-        #data['user'] = user_id
-        serializer = OrderSerializer(data=request.data)
+        serializer = OrderSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             user_creation_id = serializer.validated_data['user'].id
             if user_creation_id == user_id:
