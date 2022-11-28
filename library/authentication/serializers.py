@@ -37,6 +37,18 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
         return instance
 
+    def validate(self, attrs):
+        # Take username and password from request
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if email and password:
+            pass
+        else:
+            msg = 'Both "email" and "password" are required.'
+            raise serializers.ValidationError(msg, code='creation')
+
+        return attrs
 
 
 class LoginSerializer(serializers.Serializer):
