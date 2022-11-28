@@ -128,13 +128,12 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
-        print(self.action)
         if self.request.user.is_authenticated:
             if self.action == 'list':
                 self.permission_classes = [IsAdminUser, ]
 
             if self.action == 'create':
-                self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
+                self.permission_classes = [IsSuperUser, ]
 
             if self.action == 'retrieve':
                 self.permission_classes = [IsOwnerOrStaff, ]
@@ -145,12 +144,11 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             if self.action == 'destroy':
                 self.permission_classes = [IsOwnerOrSuperUser, ]
         else:
-            # if self.action == 'create':
-            #     print('gav')
-            #     self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
-            # else:
-            #     self.permission_classes = [IsNotAllowed, ]
-            self.permission_classes = [IsNotAllowed,]
+            if self.action == 'create':
+                self.permission_classes = [NotAuthenticate, ]
+            else:
+                self.permission_classes = [IsAuthenticated, ]
+
         return super().get_permissions()
 
 
