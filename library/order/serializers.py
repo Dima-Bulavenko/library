@@ -12,6 +12,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def get_fields(self):
         fields = super().get_fields()
+        fields['book'].initial = 3
         if self.instance:
             fields['user'].read_only = True
             fields['book'].read_only = True
