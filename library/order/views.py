@@ -95,6 +95,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 class OrderByUserViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
+    permission_classes = (NotAllowedUpdateAndDeletePermission, )
 
     def get_user_id(self):
         user_id = self.request.META['PATH_INFO'].split('/')[4]
