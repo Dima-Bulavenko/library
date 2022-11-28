@@ -3,7 +3,7 @@ from rest_framework import viewsets
 
 from .models import *
 from datetime import datetime as dt, timedelta
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from book.models import Book
 from authentication.models import CustomUser
@@ -11,7 +11,11 @@ from django.core.paginator import Paginator
 from .forms import CreateOrderForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from rest_framework import viewsets
 from .serializers import OrderSerializer
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 
 
 class ShowOrders(LoginRequiredMixin, ListView):
@@ -77,3 +81,33 @@ def create_order(request):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+
+class OrderByUserViewSet(viewsets.ModelViewSet):
+    serializer_class = OrderSerializer
+
+    def get_user_id(self):
+        user_id = self.request.META['PATH_INFO'].split('/')[4]
+        return user_id
+
+    def get_queryset(self):
+        user_id = self.get_user_id()
+        return Order.get_by_user(user_id)
+
+    def create(self, request, user_id):
+        #data = request.data.copy()
+        #data['user'] = user_id
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            user_creation_id = serializer.validated_data['user'].id
+            if user_creation_id == user_id:
+                serializer.save()
+                return Response(serializer.data, status=HTTP_201_CREATED)
+            return Response(f'Ви намагаєтесь присвоїти замовлення іншому замовнику, спробуйте ще раз з id = {user_id}', status=HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+    # def get_serializer_class(self):
+    #     serializer_class = self.serializer_class
+    #     if self.request.method == 'POST':
+    #         serializer_class = OrderSerializer2
+    #     return serializer_class
