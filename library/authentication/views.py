@@ -16,12 +16,13 @@ from .serializers import CustomUserSerializer, LoginSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.generics import CreateAPIView
 
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from .signin import EmailAuthBackend
+from .permissions import *
 
 
 def create(request):
@@ -121,15 +122,46 @@ def edit(request):
     return render(request, 'authentication/edit.html', {'form': form})
 
 
-#REST API
+# REST API
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
 
-    def get_user_id(self):
-        user_id = self.request.META['PATH_INFO'].split('/')[4] # get user id from url
-        print(user_id)
-        return user_id
+    def get_permissions(self):
+        print(self.action)
+        if self.request.user.is_authenticated:
+            if self.action == 'list':
+                self.permission_classes.append(IsAdminUser)
+
+            if self.action == 'create':
+                self.permission_classes.append(IsSuperUserOrNotAuthenticate)
+
+            if self.action == 'retrieve':
+                self.permission_classes.append(IsOwnerOrStaff)
+
+            if self.action == 'update':
+                self.permission_classes.append(IsOwnerOrSuperUser)
+
+            if self.action == 'partial_update':
+                pass
+
+            if self.action == 'destroy':
+                self.permission_classes.append(IsOwnerOrSuperUser)
+
+        else:
+            # if self.action == 'create':
+            #     print('gav')
+            #     self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
+            # else:
+            #     self.permission_classes = [IsNotAllowed, ]
+            self.permission_classes = [IsNotAllowed,]
+        return super().get_permissions()
+
+
+    # def get_user_id(self):
+    #     user_id = self.request.META['PATH_INFO'].split('/')[4] # get user id from url
+    #     print(user_id)
+    #     return user_id
 
     # def get_queryset(self):
     #     url_user_id = self.get_user_id()
@@ -138,9 +170,11 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     #     if self.request.user.is_authenticated and url_user_id == self.request.user.id:
     #         return CustomUser.objects.filter(id=self.request.user.pk)
 
+
 class AuthenticatedView(APIView):
     permission_classes = [IsAuthenticated, ]
 
     def get(self, request):
-        msg = {'message': f'Hi {request.user.email}! Your role is {ROLE_CHOICES[request.user.role][1]} ! Congratulations on being authenticated!'}
+        msg = {
+            'message': f'Hi {request.user.email}! Your role is {ROLE_CHOICES[request.user.role][1]} ! Congratulations on being authenticated!'}
         return Response(msg, status=status.HTTP_200_OK)
