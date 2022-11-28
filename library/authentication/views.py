@@ -124,16 +124,22 @@ def edit(request):
 
 # REST API
 class CustomUserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.get_all()
+    #queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
-        if self.request.user.is_authenticated:
+        #print(self.action)
+        #print(self.request.user)
+
+        if self.action == 'create' or self.action == 'list':
+            self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
+
+        elif self.request.user.is_authenticated:
             if self.action == 'list':
                 self.permission_classes = [IsAdminUser, ]
 
-            if self.action == 'create':
-                self.permission_classes = [IsSuperUser, ]
+            # if self.action == 'create':
+            #     self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
 
             if self.action == 'retrieve':
                 self.permission_classes = [IsOwnerOrStaff, ]
@@ -144,25 +150,19 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             if self.action == 'destroy':
                 self.permission_classes = [IsOwnerOrSuperUser, ]
         else:
-            if self.action == 'create':
-                self.permission_classes = [NotAuthenticate, ]
-            else:
-                self.permission_classes = [IsAuthenticated, ]
-
+            # if self.action == 'create':
+            #     print('gav')
+            #     self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
+            # else:
+            #     self.permission_classes = [IsNotAllowed, ]
+            self.permission_classes = [IsNotAllowed,]
         return super().get_permissions()
 
 
-    # def get_user_id(self):
-    #     user_id = self.request.META['PATH_INFO'].split('/')[4] # get user id from url
-    #     print(user_id)
-    #     return user_id
-
-    # def get_queryset(self):
-    #     url_user_id = self.get_user_id()
-    #     if self.request.user.is_authenticated and (self.request.user.is_superuser or (self.request.user.role == 1 and self.request.method == 'GET')):
-    #         return CustomUser.objects.all()
-    #     if self.request.user.is_authenticated and url_user_id == self.request.user.id:
-    #         return CustomUser.objects.filter(id=self.request.user.pk)
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return CustomUser.objects.all()
+        return []
 
 
 class AuthenticatedView(APIView):

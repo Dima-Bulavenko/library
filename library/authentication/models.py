@@ -2,6 +2,7 @@ import datetime
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.db import models
 from django.urls import reverse
+from rest_framework import serializers
 
 ROLE_CHOICES = (
     (0, 'visitor'),
@@ -179,7 +180,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             custom_user.set_password(password)
             custom_user.save()
             return custom_user
-        return None
+        raise serializers.ValidationError('ВВедені дані некоректні', code='creation')
 
     def to_dict(self):
         """
