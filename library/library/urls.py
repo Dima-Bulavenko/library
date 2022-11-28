@@ -30,10 +30,7 @@ urlpatterns = [
     path('librarian/', include('authentication.urls')),
 
     #path('api-auth', include('rest_framework.urls')),
-    #path('api-login/', user_login),
     path('api-auth/', AuthenticatedView.as_view()),
-    path('create-user/', CreateUser.as_view()),
-    #path('api-login/', LoginView.as_view()),
     path('api/v1/author/', include('author.rest_urls')),
     path('api/v1/user/', include('authentication.rest_urls')),
     path('api/v1/book/', include('book.rest_urls')),
