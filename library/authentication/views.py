@@ -131,23 +131,19 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         print(self.action)
         if self.request.user.is_authenticated:
             if self.action == 'list':
-                self.permission_classes.append(IsAdminUser)
+                self.permission_classes = [IsAdminUser, ]
 
             if self.action == 'create':
-                self.permission_classes.append(IsSuperUserOrNotAuthenticate)
+                self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
 
             if self.action == 'retrieve':
-                self.permission_classes.append(IsOwnerOrStaff)
+                self.permission_classes = [IsOwnerOrStaff, ]
 
             if self.action == 'update':
-                self.permission_classes.append(IsOwnerOrSuperUser)
-
-            if self.action == 'partial_update':
-                pass
+                self.permission_classes = [IsOwnerOrSuperUser, ]
 
             if self.action == 'destroy':
-                self.permission_classes.append(IsOwnerOrSuperUser)
-
+                self.permission_classes = [IsOwnerOrSuperUser, ]
         else:
             # if self.action == 'create':
             #     print('gav')
