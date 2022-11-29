@@ -124,22 +124,15 @@ def edit(request):
 
 # REST API
 class CustomUserViewSet(viewsets.ModelViewSet):
-    #queryset = CustomUser.get_all()
+    # queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
-        #print(self.action)
-        #print(self.request.user)
-
         if self.action == 'create' or self.action == 'list':
             self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
-
         elif self.request.user.is_authenticated:
             if self.action == 'list':
                 self.permission_classes = [IsAdminUser, ]
-
-            # if self.action == 'create':
-            #     self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
 
             if self.action == 'retrieve':
                 self.permission_classes = [IsOwnerOrStaff, ]
@@ -150,14 +143,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             if self.action == 'destroy':
                 self.permission_classes = [IsOwnerOrSuperUser, ]
         else:
-            # if self.action == 'create':
-            #     print('gav')
-            #     self.permission_classes = [IsSuperUserOrNotAuthenticate, ]
-            # else:
-            #     self.permission_classes = [IsNotAllowed, ]
-            self.permission_classes = [IsNotAllowed,]
+            self.permission_classes = [IsNotAllowed, ]
         return super().get_permissions()
-
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
