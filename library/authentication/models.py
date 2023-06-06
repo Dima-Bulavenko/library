@@ -88,12 +88,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'користувач(а)'
         verbose_name_plural = 'користувачі'
         ordering = ['-id']
-        # permissions = [
-        #     ('read_users', 'Can read users'),  # visitor(himself), librarian(himself, all), admin(himself, all)
-        #     ('delete_users', 'Can delete users'),   # visitor(himself), librarian(himself), admin(himself, all)
-        #     ('change_users', 'Can change users'),  # visitor(himself), librarian(himself), admin(himself, all)
-        #     ('add_user', 'Can add user'),  # Anonymous, admin
-        # ]
 
     def has_perm(self, perm, obj=None):
         return self.is_superuser or self.role
@@ -111,7 +105,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                  user email, user password, user updated_at, user created_at,
                  user role, user is_active
         """
-        # return f"'id': {self.id}, 'first_name': '{self.first_name}', 'middle_name': '{self.middle_name}', 'last_name': '{self.last_name}', 'email': '{self.email}', 'created_at': {int(self.created_at.timestamp())}, 'updated_at': {int(self.updated_at.timestamp())}, 'role': {self.role}, 'is_active': {self.is_active}"  # 'password': '{self.password}', \
         return f'{self.id} - {self.email}'
 
     def __repr__(self):

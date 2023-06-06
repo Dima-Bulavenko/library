@@ -1,27 +1,21 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import *
 from django.http import HttpResponse
 from .forms import UserLoginForm, UserRegisterForm, UserUpdateForm
 from django.views.generic import ListView
-from django.core.paginator import Paginator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from .models import ROLE_CHOICES
 
-from rest_framework import viewsets, views
-from .serializers import CustomUserSerializer, LoginSerializer
+from rest_framework import viewsets
+from .serializers import CustomUserSerializer
 
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
-from rest_framework.generics import CreateAPIView
-
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view, permission_classes
-from .signin import EmailAuthBackend
 from .permissions import *
 
 
@@ -29,16 +23,9 @@ def create(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            # только регистрация
             form.save()
             messages.success(request, 'Успішна регістрація!')
             return redirect('signin')
-
-            # регистрация и вход
-            # user = form.save()
-            # login(request, user, backend='authentication.signin.EmailAuthBackend')
-            # messages.success(request, 'Успішна регістрація! Ви увійшли!')
-            # return redirect('home')
         else:
             messages.error(request, form.errors)
     else:
@@ -124,7 +111,6 @@ def edit(request):
 
 # REST API
 class CustomUserViewSet(viewsets.ModelViewSet):
-    # queryset = CustomUser.get_all()
     serializer_class = CustomUserSerializer
 
     def get_permissions(self):
